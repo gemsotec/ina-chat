@@ -1,5 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
+//
+// Modified by Gemsotec on 2026-10-02: user limits disabled.
 
 package app
 
@@ -10,8 +12,8 @@ import (
 )
 
 const (
-	maxUsersLimit     = 200
-	maxUsersHardLimit = 250
+	maxUsersLimit     = 0
+	maxUsersHardLimit = 0
 )
 
 // GetServerLimits returns the server's seat/post-history limits. The license-derived

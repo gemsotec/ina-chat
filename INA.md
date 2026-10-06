@@ -13,6 +13,7 @@ Mattermost Team Edition, gebouwd zonder de build tags `enterprise`, `sourceavail
 | --- | --- |
 | `server/channels/app/limits.go` | `maxUsersLimit` en `maxUsersHardLimit` op `0` |
 | `Dockerfile` | Toegevoegd |
+| `.dockerignore` | Toegevoegd |
 | `INA.md` | Toegevoegd |
 
 ## Versies

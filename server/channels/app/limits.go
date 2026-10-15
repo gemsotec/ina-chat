@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 //
-// Modified by Gemsotec on 2026-10-02: user limits disabled.
+// Modified by Gemsotec on 2026-10-15: user limits disabled.
 
 package app
 

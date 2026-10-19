@@ -21,3 +21,5 @@ RUN model=github.com/mattermost/mattermost/server/public/model \
 
 FROM mattermost/mattermost-team-edition:${MATTERMOST_VERSION}
 COPY --from=build --chown=2000:2000 /out/mattermost /mattermost/bin/mattermost
+
+RUN ["/mattermost/bin/mmctl", "config", "subpath", "--assets-dir", "/mattermost/client", "--path", "/chat"]

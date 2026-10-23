@@ -158,14 +158,14 @@ PLUGIN_PACKAGES ?= $(PLUGIN_PACKAGES:)
 PLUGIN_PACKAGES += mattermost-plugin-calls-v1.11.6
 PLUGIN_PACKAGES += mattermost-plugin-github-v2.7.0
 PLUGIN_PACKAGES += mattermost-plugin-gitlab-v1.12.4
-PLUGIN_PACKAGES += mattermost-plugin-jira-v4.7.3
+PLUGIN_PACKAGES += mattermost-plugin-jira-v4.7.4
 PLUGIN_PACKAGES += mattermost-plugin-playbooks-v2.9.6
 PLUGIN_PACKAGES += mattermost-plugin-servicenow-v2.4.0
 PLUGIN_PACKAGES += mattermost-plugin-zoom-v1.13.1
-PLUGIN_PACKAGES += mattermost-plugin-agents-v2.0.9
+PLUGIN_PACKAGES += mattermost-plugin-agents-v2.0.10
 PLUGIN_PACKAGES += mattermost-plugin-boards-v9.2.8
 PLUGIN_PACKAGES += mattermost-plugin-user-survey-v1.1.1
-PLUGIN_PACKAGES += mattermost-plugin-mscalendar-v1.6.2
+PLUGIN_PACKAGES += mattermost-plugin-mscalendar-v1.6.3
 PLUGIN_PACKAGES += mattermost-plugin-msteams-meetings-v2.4.1
 PLUGIN_PACKAGES += mattermost-plugin-metrics-v0.7.0
 PLUGIN_PACKAGES += mattermost-plugin-channel-export-v1.3.0
@@ -176,7 +176,7 @@ PLUGIN_PACKAGES += mattermost-plugin-channel-export-v1.3.0
 # the way we pre-package FIPS and non-FIPS plugins.
 ifeq ($(FIPS_ENABLED),true)
 	PLUGIN_PACKAGES  = mattermost-plugin-playbooks-v2.9.6%2B7a6250e-fips
-	PLUGIN_PACKAGES += mattermost-plugin-agents-v2.0.9%2B5085236-fips
+	PLUGIN_PACKAGES += mattermost-plugin-agents-v2.0.10%2B625a13c-fips
 	PLUGIN_PACKAGES += mattermost-plugin-boards-v9.2.8%2B6e21d1c-fips
 endif
 
@@ -427,6 +427,16 @@ mmctl-mocks: setup-go-work ## Creates mocks for mmctl
 pluginapi: setup-go-work ## Generates api and hooks glue code for plugins
 	cd ./public && $(GO) generate $(GOFLAGS) ./plugin
 
+.PHONY: default-roles-permissions
+default-roles-permissions: setup-go-work start-docker ## Generates the Playwright default_roles_permissions file from a live database.
+	$(GO) run $(GOFLAGS) ./scripts/default_permissions_generator \
+		-out ../e2e-tests/playwright/lib/src/server/default_roles_permissions.ts
+
+.PHONY: default-feature-flags
+default-feature-flags: setup-go-work ## Generates the Playwright default_feature_flags file from the model defaults.
+	$(GO) run $(GOFLAGS) ./scripts/default_feature_flags_generator \
+		-out ../e2e-tests/playwright/lib/src/server/default_feature_flags.ts
+
 .PHONY: mocks
 mocks: store-mocks filestore-mocks ldap-mocks plugin-mocks einterfaces-mocks searchengine-mocks sharedchannel-mocks misc-mocks email-mocks platform-mocks mmctl-mocks mocks-public cache-mocks
 
@@ -434,7 +444,7 @@ mocks: store-mocks filestore-mocks ldap-mocks plugin-mocks einterfaces-mocks sea
 layers: store-layers pluginapi
 
 .PHONY: generated
-generated: mocks layers gen-serialized migrations-extract build-templates mmctl-docs modules-tidy ## Regenerate every committed generated asset checked by the check-generated CI job.
+generated: mocks layers gen-serialized migrations-extract build-templates mmctl-docs modules-tidy default-roles-permissions default-feature-flags ## Regenerate every committed generated asset checked by the check-generated CI job.
 
 .PHONY: check-prereqs-enterprise
 check-prereqs-enterprise: setup-go-work ## Checks prerequisite software status for enterprise.

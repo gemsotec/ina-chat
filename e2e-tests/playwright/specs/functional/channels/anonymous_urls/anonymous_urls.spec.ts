@@ -82,21 +82,6 @@ test.describe('Anonymous URLs', () => {
         await setAnonymousUrls(adminClient, false);
     });
 
-    // Reset PrivacySettings.UseAnonymousURLs to its default (off) at the end
-    // of this file so leftover state does not affect other suites. Tests within
-    // this file explicitly set the value they need at the start of each test.
-    test.afterAll(async () => {
-        try {
-            const {adminClient} = await getAdminClient({skipLog: true});
-            await adminClient.patchConfig({
-                PrivacySettings: {
-                    UseAnonymousURLs: false,
-                },
-            });
-        } catch {
-            // Best-effort cleanup; do not fail the suite if admin client is unavailable.
-        }
-    });
     /**
      * @objective Verify that the anonymous URLs setting can be toggled on from System Console and persists after navigation
      *
@@ -423,7 +408,7 @@ test.describe('Anonymous URLs', () => {
 
             // * Verify the restored channel still uses the original anonymous URL route
             await channelsPage.centerView.header.toHaveTitle(channelDisplayName);
-            await expect(channelsPage.page).toHaveURL(`/${team.name}/channels/${createdChannel.name}`);
+            await expect(channelsPage.page).toHavePath(`/${team.name}/channels/${createdChannel.name}`);
         },
     );
 
@@ -474,7 +459,7 @@ test.describe('Anonymous URLs', () => {
             const {channelsPage} = await pw.testBrowser.login(adminUser);
             await channelsPage.goto(team.name, legacyChannelSlug);
             await channelsPage.toBeVisible();
-            await expect(channelsPage.page).toHaveURL(`/${team.name}/channels/${legacyChannelSlug}`);
+            await expect(channelsPage.page).toHavePath(`/${team.name}/channels/${legacyChannelSlug}`);
 
             // # Create a new channel after the anonymous URL toggle
             const anonymousChannelDisplayName = `Anonymous Channel ${pw.random.id()}`;
@@ -486,7 +471,7 @@ test.describe('Anonymous URLs', () => {
 
             // * Verify only the new channel receives an obfuscated slug
             expectObfuscatedSlug(anonymousChannel.name);
-            await expect(channelsPage.page).toHaveURL(`/${team.name}/channels/${anonymousChannel.name}`);
+            await expect(channelsPage.page).toHavePath(`/${team.name}/channels/${anonymousChannel.name}`);
 
             // # Create a new team after the anonymous URL toggle
             const anonymousTeamDisplayName = `Anonymous Team ${pw.random.id()}`;
@@ -540,7 +525,7 @@ test.describe('Anonymous URLs', () => {
             await channelsPage.toBeVisible();
 
             // * Verify the DM still uses the standard message route
-            await expect(channelsPage.page).toHaveURL(`/${team.name}/messages/@${secondUser.username}`);
+            await expect(channelsPage.page).toHavePath(`/${team.name}/messages/@${secondUser.username}`);
             await channelsPage.centerView.waitUntilLastPostContains(dmMessage);
 
             // # Open the GM route
@@ -548,7 +533,7 @@ test.describe('Anonymous URLs', () => {
             await channelsPage.toBeVisible();
 
             // * Verify the GM still uses the standard message route
-            await expect(channelsPage.page).toHaveURL(`/${team.name}/messages/${gmChannel.name}`);
+            await expect(channelsPage.page).toHavePath(`/${team.name}/messages/${gmChannel.name}`);
             await channelsPage.centerView.waitUntilLastPostContains(gmMessage);
         },
     );
@@ -601,7 +586,7 @@ test.describe('Anonymous URLs', () => {
             await channelsPage.toBeVisible();
 
             // * Verify the obfuscated route still resolves to the renamed channel
-            await expect(channelsPage.page).toHaveURL(`/${team.name}/channels/${originalSlug}`);
+            await expect(channelsPage.page).toHavePath(`/${team.name}/channels/${originalSlug}`);
             await channelsPage.centerView.header.toHaveTitle(renamedDisplayName);
         },
     );
@@ -695,7 +680,7 @@ test.describe('Anonymous URLs', () => {
 
             // * Verify the permalink resolves to the channel's obfuscated route
             await channelsPage.centerView.header.toHaveTitle(displayName);
-            await expect(channelsPage.page).toHaveURL(`/${team.name}/channels/${channel.name}`);
+            await expect(channelsPage.page).toHavePath(`/${team.name}/channels/${channel.name}`);
             await channelsPage.centerView.waitUntilPostWithIdContains(postId, message);
 
             // # Disable anonymous URLs and reopen the same permalink
@@ -704,7 +689,7 @@ test.describe('Anonymous URLs', () => {
 
             // * Verify the permalink still resolves to the existing obfuscated route
             await channelsPage.centerView.header.toHaveTitle(displayName);
-            await expect(channelsPage.page).toHaveURL(`/${team.name}/channels/${channel.name}`);
+            await expect(channelsPage.page).toHavePath(`/${team.name}/channels/${channel.name}`);
             await channelsPage.centerView.waitUntilPostWithIdContains(postId, message);
         },
     );
@@ -749,7 +734,7 @@ test.describe('Anonymous URLs', () => {
 
         // * Verify navigation lands on the obfuscated route
         await channelsPage.centerView.header.toHaveTitle(targetChannel.displayName);
-        await expect(channelsPage.page).toHaveURL(`/${team.name}/channels/${targetChannel.channel.name}`);
+        await expect(channelsPage.page).toHavePath(`/${team.name}/channels/${targetChannel.channel.name}`);
     });
 
     /**

@@ -3079,10 +3079,6 @@
     "translation": "Cannot update post in restricted direct message channel."
   },
   {
-    "id": "api.post.update_post.find.app_error",
-    "translation": "Unable to find the existing post or comment to update."
-  },
-  {
     "id": "api.post.update_post.permissions_details.app_error",
     "translation": "Already deleted id={{.PostId}}."
   },
@@ -8189,6 +8185,10 @@
   {
     "id": "app.save_config.app_error",
     "translation": "An error occurred saving the configuration."
+  },
+  {
+    "id": "app.save_config.log_path_outside_root.app_error",
+    "translation": "The logging configuration contains a log or audit file path outside the logging root directory. Check the server logs for details."
   },
   {
     "id": "app.save_config.plugin_hook_error",

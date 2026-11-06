@@ -8188,7 +8188,7 @@
   },
   {
     "id": "app.save_config.log_path_outside_root.app_error",
-    "translation": "The logging configuration contains a log or audit file path outside the logging root directory. Check the server logs for details."
+    "translation": "The logging configuration contains a log or audit file path outside the logging root directory or inside a directory the server manages. Check the server logs for details."
   },
   {
     "id": "app.save_config.plugin_hook_error",
@@ -9591,10 +9591,6 @@
   {
     "id": "ent.elasticsearch.search_posts.disabled",
     "translation": "{{.Backend}} searching is disabled on this server"
-  },
-  {
-    "id": "ent.elasticsearch.search_posts.parse_matches_failed",
-    "translation": "Failed to parse search result matches"
   },
   {
     "id": "ent.elasticsearch.search_posts.search_failed",

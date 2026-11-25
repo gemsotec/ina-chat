@@ -11,19 +11,19 @@ WORKDIR /src/server
 RUN go work init . ./public
 
 RUN model=github.com/mattermost/mattermost/server/public/model \
-  && CGO_ENABLED=0 GOOS=linux GOARCH=$TARGETARCH go build -o /out/mattermost -buildvcs=false -trimpath -tags production \
+  && CGO_ENABLED=0 GOOS=linux GOARCH=$TARGETARCH go build -o /out/ -buildvcs=false -trimpath -tags production \
     -ldflags "-X '$model.BuildNumber=${MATTERMOST_VERSION}' \
               -X '$model.BuildDate=$(date -u)' \
               -X '$model.BuildHash=${BUILD_HASH}' \
               -X '$model.BuildHashEnterprise=none' \
               -X '$model.BuildEnterpriseReady=false'" \
-    ./cmd/mattermost
+    ./cmd/mattermost ./cmd/mmctl
 
 FROM mattermost/mattermost-team-edition:${MATTERMOST_VERSION} AS upstream
 
 FROM debian:12-slim AS rootfs
 COPY --from=upstream / /rootfs
-COPY --from=build --chown=2000:2000 /out/mattermost /rootfs/mattermost/bin/mattermost
+COPY --from=build --chown=2000:2000 /out/mattermost /out/mmctl /rootfs/mattermost/bin/
 RUN rm -rf /rootfs/mattermost/prepackaged_plugins/* \
   && apt-get update \
   && cd /tmp && apt-get download libssl3 \

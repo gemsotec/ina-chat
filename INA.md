@@ -25,7 +25,7 @@ krijgen een volgnummer: `ina/<versie>-1`, `ina/<versie>-2`, …
 
 De `Dockerfile` vertrekt van de image `mattermost/mattermost-team-edition` en past die aan:
 
-- de server wordt gebouwd met de nieuwste Go-patchversie;
+- `mattermost` en `mmctl` worden zelf gebouwd met de nieuwste Go-patchversie en de verhoogde dependencies;
 - de prepackaged plugins worden verwijderd: INA gebruikt ze niet
   (`MM_PLUGINSETTINGS_AUTOMATICPREPACKAGEDPLUGINS=false`) en ze bevatten oude Go-dependencies;
 - `libssl3` wordt vervangen door de nieuwste versie uit Debian 12.
